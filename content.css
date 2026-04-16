@@ -1,41 +1,5 @@
 /* QueueTube - Content Script Styles */
 
-/* ===== Watch page button ===== */
-.ytq-queue-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0 12px;
-  height: 36px;
-  border: none;
-  border-radius: 18px;
-  background: #272727;
-  color: #fff;
-  font-size: 14px;
-  font-family: "Roboto", "Arial", sans-serif;
-  font-weight: 500;
-  cursor: pointer;
-  margin-left: 8px;
-  transition: background 0.2s;
-  white-space: nowrap;
-}
-
-.ytq-queue-btn:hover {
-  background: #3a3a3a;
-}
-
-.ytq-queue-btn.ytq-added {
-  background: #2e7d32;
-}
-
-.ytq-queue-btn.ytq-error {
-  background: #c62828;
-}
-
-.ytq-queue-btn svg {
-  flex-shrink: 0;
-}
-
 /* ===== Thumbnail overlay button ===== */
 .ytq-thumb-btn {
   position: absolute;
@@ -64,7 +28,12 @@ ytd-thumbnail:hover .ytq-thumb-btn,
 #thumbnail:hover .ytq-thumb-btn,
 a.ytLockupViewModelContentImage:hover .ytq-thumb-btn,
 yt-lockup-view-model:hover .ytq-thumb-btn,
+ytd-lockup-view-model:hover .ytq-thumb-btn,
+yt-thumbnail-view-model:hover .ytq-thumb-btn,
 ytd-rich-item-renderer:hover .ytq-thumb-btn,
+ytd-video-renderer:hover .ytq-thumb-btn,
+ytd-compact-video-renderer:hover .ytq-thumb-btn,
+ytd-grid-video-renderer:hover .ytq-thumb-btn,
 .ytq-thumb-btn:hover {
   opacity: 1;
   transform: scale(1);
@@ -99,8 +68,9 @@ ytd-rich-item-renderer:hover .ytq-thumb-btn,
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 0 12px;
+  padding: 0 10px;
   margin-top: 6px;
+  margin-right: 32px;
   height: 26px;
   border: none;
   border-radius: 13px;

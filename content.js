@@ -3,16 +3,25 @@
 (function () {
   "use strict";
 
-  let watchButtonInjected = false;
+  let injectScheduled = false;
+
+  // =============================================
+  // Debounced injection: batch rapid DOM mutations
+  // =============================================
+  function scheduleInject() {
+    if (injectScheduled) return;
+    injectScheduled = true;
+    requestAnimationFrame(() => {
+      injectScheduled = false;
+      injectThumbnailButtons();
+    });
+  }
 
   // =============================================
   // MutationObserver: inject buttons on DOM changes
   // =============================================
   const observer = new MutationObserver(() => {
-    injectThumbnailButtons();
-    if (isVideoPage() && !watchButtonInjected) {
-      injectWatchPageButton();
-    }
+    scheduleInject();
   });
 
   function startObserver() {
@@ -31,24 +40,17 @@
 
   // YouTube SPA navigation
   window.addEventListener("yt-navigate-finish", () => {
-    watchButtonInjected = false;
     tryInject();
   });
 
   function tryInject() {
-    setTimeout(() => {
-      injectThumbnailButtons();
-      if (isVideoPage()) {
-        injectWatchPageButton();
-      }
-    }, 800);
-    // Re-inject for lazy-loaded grid items
-    setTimeout(() => injectThumbnailButtons(), 2000);
-    setTimeout(() => injectThumbnailButtons(), 4000);
-  }
-
-  function isVideoPage() {
-    return window.location.pathname === "/watch";
+    // Staggered retries to catch progressively rendered content
+    const delays = [300, 800, 1500, 2500, 4000, 6000];
+    delays.forEach((delay) => {
+      setTimeout(() => {
+        injectThumbnailButtons();
+      }, delay);
+    });
   }
 
   // =============================================
@@ -71,14 +73,36 @@
       ytd-playlist-video-renderer,
       ytd-reel-item-renderer,
       ytd-playlist-panel-video-renderer,
-      ytd-grid-movie-renderer
+      ytd-grid-movie-renderer,
+      ytd-rich-grid-row,
+      ytd-shelf-renderer ytd-video-renderer,
+      ytm-media-item
     `);
 
     renderers.forEach((renderer) => processRenderer(renderer));
 
     // Strategy 2: New YouTube lockup view model (home page grid)
-    const lockups = document.querySelectorAll("yt-lockup-view-model");
+    const lockups = document.querySelectorAll("yt-lockup-view-model, ytd-lockup-view-model");
     lockups.forEach((lockup) => processRenderer(lockup));
+
+    // Strategy 3: Fallback - find any video link containers not yet processed
+    document.querySelectorAll('a[href*="/watch"], a[href*="/shorts/"]').forEach((link) => {
+      // Walk up to find the nearest meaningful container
+      const container =
+        link.closest("ytd-video-renderer") ||
+        link.closest("ytd-rich-item-renderer") ||
+        link.closest("ytd-compact-video-renderer") ||
+        link.closest("ytd-grid-video-renderer") ||
+        link.closest("ytd-playlist-video-renderer") ||
+        link.closest("ytd-rich-grid-media") ||
+        link.closest("yt-lockup-view-model") ||
+        link.closest("ytd-lockup-view-model") ||
+        link.closest("ytd-reel-item-renderer") ||
+        link.closest("ytd-playlist-panel-video-renderer");
+      if (container && !container.querySelector(".ytq-thumb-btn") && !container.querySelector(".ytq-inline-btn")) {
+        processRenderer(container);
+      }
+    });
   }
 
   function processRenderer(renderer) {
@@ -92,10 +116,12 @@
       renderer.querySelector("a#video-title-link") ||
       renderer.querySelector("a#video-title") ||
       renderer.querySelector('a[href*="/watch"]') ||
-      renderer.querySelector('a[href*="/shorts/"]');
+      renderer.querySelector('a[href*="/shorts/"]') ||
+      renderer.querySelector("a.yt-simple-endpoint[href]") ||
+      renderer.querySelector("a[href]");
     if (!linkEl) return;
 
-    const href = linkEl.href || linkEl.getAttribute("href");
+    const href = linkEl.href || linkEl.getAttribute("href") || "";
     if (!href || (!href.includes("/watch") && !href.includes("/shorts/"))) return;
 
     const videoUrl = new URL(href, window.location.origin).href;
@@ -108,7 +134,10 @@
       renderer.querySelector("#video-title-link") ||
       renderer.querySelector("span#video-title") ||
       renderer.querySelector("h3 yt-formatted-string") ||
-      renderer.querySelector("a[aria-label]");
+      renderer.querySelector("a[aria-label]") ||
+      renderer.querySelector("[aria-label]") ||
+      renderer.querySelector("yt-formatted-string.ytd-channel-name") ||
+      renderer.querySelector("yt-lockup-metadata-view-model h3");
     let videoTitle = "";
     if (titleEl) {
       videoTitle = titleEl.textContent.trim() || titleEl.getAttribute("aria-label") || titleEl.getAttribute("title") || "";
@@ -117,18 +146,25 @@
     if (!videoTitle && linkEl) {
       videoTitle = linkEl.getAttribute("aria-label") || linkEl.getAttribute("title") || "";
     }
+    // Fallback: try any aria-label in the renderer
+    if (!videoTitle) {
+      const ariaEl = renderer.querySelector("[aria-label]");
+      if (ariaEl) videoTitle = ariaEl.getAttribute("aria-label") || "";
+    }
 
     // === 1) Overlay button on thumbnail ===
     const thumbnail =
       renderer.querySelector("ytd-thumbnail") ||
       renderer.querySelector("#thumbnail") ||
-      renderer.querySelector("a#thumbnail");
+      renderer.querySelector("a#thumbnail") ||
+      renderer.querySelector("yt-thumbnail-view-model") ||
+      renderer.querySelector(".ytd-thumbnail");
 
     // For new lockup structure, find the first link with an img as thumbnail
     const thumbTarget = thumbnail || linkEl.querySelector("img")?.closest("a") || linkEl;
 
     if (thumbTarget && !thumbTarget.querySelector(".ytq-thumb-btn")) {
-      const thumbContainer = thumbTarget.closest("ytd-thumbnail") || thumbTarget;
+      const thumbContainer = thumbTarget.closest("ytd-thumbnail") || thumbTarget.closest("yt-thumbnail-view-model") || thumbTarget;
       const currentPos = getComputedStyle(thumbContainer).position;
       if (currentPos === "static") {
         thumbContainer.style.position = "relative";
@@ -157,7 +193,11 @@
       renderer.querySelector("#metadata-line") ||
       renderer.querySelector("ytd-video-meta-block") ||
       renderer.querySelector(".metadata") ||
-      renderer.querySelector("#menu");
+      renderer.querySelector("#menu") ||
+      renderer.querySelector("#dismissible #details") ||
+      renderer.querySelector("#dismissible #meta") ||
+      renderer.querySelector("div#metadata") ||
+      renderer.querySelector("#content");
 
     if (metaArea && !metaArea.querySelector(".ytq-inline-btn")) {
       const inlineBtn = document.createElement("button");
@@ -216,81 +256,6 @@
         else btn.innerHTML = ICON_QUEUE;
       }, 2000);
     }
-  }
-
-  // =============================================
-  // Watch page button (below video player)
-  // =============================================
-  function injectWatchPageButton() {
-    if (watchButtonInjected) return;
-
-    const actionsRow =
-      document.querySelector("#top-level-buttons-computed") ||
-      document.querySelector("ytd-menu-renderer #top-level-buttons-computed");
-
-    if (!actionsRow) return;
-
-    if (document.getElementById("ytq-add-to-queue-btn")) {
-      watchButtonInjected = true;
-      return;
-    }
-
-    const btn = document.createElement("button");
-    btn.id = "ytq-add-to-queue-btn";
-    btn.className = "ytq-queue-btn";
-    btn.innerHTML = `
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-        <path d="M3 4h14v2H3V4zm0 4h14v2H3V8zm0 4h10v2H3v-2zm14 0v6l5-3-5-3z"/>
-      </svg>
-      <span>Add to Queue</span>
-    `;
-
-    btn.addEventListener("click", async (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const info = getWatchPageVideoInfo();
-      const response = await chrome.runtime.sendMessage({
-        action: "addToQueue",
-        ...info,
-      });
-
-      if (response.success) {
-        btn.classList.add("ytq-added");
-        btn.querySelector("span").textContent = "Added ✓";
-        setTimeout(() => {
-          btn.classList.remove("ytq-added");
-          btn.querySelector("span").textContent = "Add to Queue";
-        }, 2000);
-      } else {
-        btn.classList.add("ytq-error");
-        btn.querySelector("span").textContent = response.error || "Error";
-        setTimeout(() => {
-          btn.classList.remove("ytq-error");
-          btn.querySelector("span").textContent = "Add to Queue";
-        }, 2000);
-      }
-    });
-
-    actionsRow.appendChild(btn);
-    watchButtonInjected = true;
-  }
-
-  function getWatchPageVideoInfo() {
-    const url = window.location.href;
-    const titleEl =
-      document.querySelector("h1.ytd-watch-metadata yt-formatted-string") ||
-      document.querySelector("h1.title yt-formatted-string") ||
-      document.querySelector("#title h1");
-    const title = titleEl ? titleEl.textContent.trim() : document.title;
-
-    const urlObj = new URL(url);
-    const videoId = urlObj.searchParams.get("v");
-    const thumbnail = videoId
-      ? `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`
-      : "";
-
-    return { url, title, thumbnail };
   }
 
   // =============================================
