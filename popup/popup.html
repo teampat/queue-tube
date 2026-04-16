@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QueueTube</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="#ff4444">
+          <path d="M3 4h14v2H3V4zm0 4h14v2H3V8zm0 4h10v2H3v-2zm14 0v6l5-3-5-3z"/>
+        </svg>
+        <h1>QueueTube</h1>
+        <span id="queueCount" class="badge">0</span>
+      </div>
+      <div class="header-right">
+        <button id="autoPlayToggle" class="pill-btn" title="Auto-Play">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+          </svg>
+          <span>Auto</span>
+        </button>
+        <button id="clearQueueBtn" class="pill-btn danger" title="Clear all">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+          </svg>
+          <span>Clear</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Now Playing -->
+    <div id="nowPlaying" class="now-playing hidden">
+      <div class="np-left">
+        <img id="nowPlayingThumb" src="" alt="">
+        <div class="np-info">
+          <div class="np-label">NOW PLAYING</div>
+          <div id="nowPlayingTitle" class="np-title"></div>
+        </div>
+      </div>
+      <div class="np-controls">
+        <button id="prevBtn" class="np-btn" title="Previous">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+          </svg>
+        </button>
+        <button id="nextBtn" class="np-btn" title="Next">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Queue List -->
+    <div id="queueList" class="queue-list">
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor">
+            <path d="M3 4h14v2H3V4zm0 4h14v2H3V8zm0 4h10v2H3v-2zm14 0v6l5-3-5-3z"/>
+          </svg>
+        </div>
+        <p>Your queue is empty</p>
+        <p class="hint">Browse YouTube and use the "Add to Queue" button on any video</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

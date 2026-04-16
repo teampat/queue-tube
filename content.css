@@ -1,0 +1,140 @@
+/* QueueTube - Content Script Styles */
+
+/* ===== Watch page button ===== */
+.ytq-queue-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  height: 36px;
+  border: none;
+  border-radius: 18px;
+  background: #272727;
+  color: #fff;
+  font-size: 14px;
+  font-family: "Roboto", "Arial", sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.ytq-queue-btn:hover {
+  background: #3a3a3a;
+}
+
+.ytq-queue-btn.ytq-added {
+  background: #2e7d32;
+}
+
+.ytq-queue-btn.ytq-error {
+  background: #c62828;
+}
+
+.ytq-queue-btn svg {
+  flex-shrink: 0;
+}
+
+/* ===== Thumbnail overlay button ===== */
+.ytq-thumb-btn {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  z-index: 999;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.15s, transform 0.15s, background 0.15s;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+ytd-thumbnail:hover .ytq-thumb-btn,
+#thumbnail:hover .ytq-thumb-btn,
+a.ytLockupViewModelContentImage:hover .ytq-thumb-btn,
+yt-lockup-view-model:hover .ytq-thumb-btn,
+ytd-rich-item-renderer:hover .ytq-thumb-btn,
+.ytq-thumb-btn:hover {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.ytq-thumb-btn:hover {
+  background: rgba(255, 68, 68, 0.95);
+}
+
+.ytq-thumb-btn:active {
+  transform: scale(0.92);
+}
+
+.ytq-thumb-btn.ytq-added {
+  opacity: 1;
+  transform: scale(1);
+  background: rgba(46, 125, 50, 0.9);
+}
+
+.ytq-thumb-btn.ytq-error {
+  opacity: 1;
+  transform: scale(1);
+  background: rgba(198, 40, 40, 0.9);
+}
+
+.ytq-thumb-btn svg {
+  pointer-events: none;
+}
+
+/* ===== Inline text button next to metadata ===== */
+.ytq-inline-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 12px;
+  margin-top: 6px;
+  height: 26px;
+  border: none;
+  border-radius: 13px;
+  background: rgba(255, 68, 68, 0.1);
+  color: #ff6b6b;
+  font-size: 11px;
+  font-family: "Roboto", "Arial", sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+
+.ytq-inline-btn:hover {
+  background: rgba(255, 68, 68, 0.2);
+  color: #ff4444;
+}
+
+.ytq-inline-btn:active {
+  transform: scale(0.95);
+}
+
+.ytq-inline-btn.ytq-added {
+  color: #66bb6a;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.ytq-inline-btn.ytq-error {
+  color: #ef5350;
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.ytq-inline-btn svg {
+  flex-shrink: 0;
+  pointer-events: none;
+}
