@@ -71,7 +71,6 @@
       ytd-compact-video-renderer,
       ytd-grid-video-renderer,
       ytd-playlist-video-renderer,
-      ytd-reel-item-renderer,
       ytd-playlist-panel-video-renderer,
       ytd-grid-movie-renderer,
       ytd-rich-grid-row,
@@ -86,7 +85,7 @@
     lockups.forEach((lockup) => processRenderer(lockup));
 
     // Strategy 3: Fallback - find any video link containers not yet processed
-    document.querySelectorAll('a[href*="/watch"], a[href*="/shorts/"]').forEach((link) => {
+    document.querySelectorAll('a[href*="/watch"]').forEach((link) => {
       // Walk up to find the nearest meaningful container
       const container =
         link.closest("ytd-video-renderer") ||
@@ -97,7 +96,6 @@
         link.closest("ytd-rich-grid-media") ||
         link.closest("yt-lockup-view-model") ||
         link.closest("ytd-lockup-view-model") ||
-        link.closest("ytd-reel-item-renderer") ||
         link.closest("ytd-playlist-panel-video-renderer");
       if (container && !container.querySelector(".ytq-thumb-btn") && !container.querySelector(".ytq-inline-btn")) {
         processRenderer(container);
@@ -106,6 +104,9 @@
   }
 
   function processRenderer(renderer) {
+    // Skip Shorts
+    if (renderer.matches("ytd-reel-item-renderer") || renderer.closest("ytd-reel-shelf-renderer")) return;
+
     // Skip if already has our button injected
     if (renderer.querySelector(".ytq-thumb-btn") || renderer.querySelector(".ytq-inline-btn")) return;
 
@@ -116,13 +117,12 @@
       renderer.querySelector("a#video-title-link") ||
       renderer.querySelector("a#video-title") ||
       renderer.querySelector('a[href*="/watch"]') ||
-      renderer.querySelector('a[href*="/shorts/"]') ||
       renderer.querySelector("a.yt-simple-endpoint[href]") ||
       renderer.querySelector("a[href]");
     if (!linkEl) return;
 
     const href = linkEl.href || linkEl.getAttribute("href") || "";
-    if (!href || (!href.includes("/watch") && !href.includes("/shorts/"))) return;
+    if (!href || !href.includes("/watch")) return;
 
     const videoUrl = new URL(href, window.location.origin).href;
 
