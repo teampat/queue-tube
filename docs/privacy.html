@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — QueueTube</title>
+  <meta name="description" content="Privacy policy for the QueueTube Chrome Extension." />
+  <link rel="icon" type="image/png" href="../icons/icon48.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="index.html">
+      <img src="../icons/icon48.png" alt="QueueTube icon" />
+      QueueTube
+    </a>
+    <ul>
+      <li><a href="index.html#features">Features</a></li>
+      <li><a href="index.html#install">Install</a></li>
+      <li><a href="privacy.html">Privacy</a></li>
+      <li><a href="https://github.com/YOUR_USERNAME/queue-tube" target="_blank" rel="noopener">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <article class="prose">
+    <h1>Privacy Policy</h1>
+    <p class="subtitle">Last updated: April 17, 2026</p>
+
+    <div class="highlight">
+      QueueTube does not collect, transmit, or share any personal data. All information is stored locally on your device.
+    </div>
+
+    <h2>1. Overview</h2>
+    <p>
+      QueueTube ("the Extension") is a Chrome browser extension that allows users to build and manage a personal YouTube watch queue. This Privacy Policy explains what data the Extension accesses, how it is used, and how it is stored.
+    </p>
+
+    <h2>2. Data We Collect</h2>
+    <p>The Extension does <strong>not</strong> collect any personally identifiable information. The only data stored by the Extension is:</p>
+    <ul>
+      <li>YouTube video URLs added to the queue by the user</li>
+      <li>YouTube video titles as displayed on the page</li>
+      <li>Queue order and playback preferences (e.g. Auto Play on/off)</li>
+    </ul>
+    <p>This data is provided voluntarily by the user and is stored exclusively in <code>chrome.storage.local</code> — local to the user's browser.</p>
+
+    <h2>3. How Data Is Used</h2>
+    <p>The data listed above is used solely to:</p>
+    <ul>
+      <li>Display the queue list in the Extension popup</li>
+      <li>Navigate the browser to the next video in the queue</li>
+      <li>Persist the queue state across browser sessions</li>
+    </ul>
+
+    <h2>4. Data Sharing</h2>
+    <p>
+      We do not sell, trade, rent, or transfer any user data to third parties. No data is transmitted to any external server, analytics service, or third-party API.
+    </p>
+
+    <h2>5. Permissions Explained</h2>
+    <ul>
+      <li><strong>storage</strong> — Saves your queue locally using <code>chrome.storage.local</code>.</li>
+      <li><strong>tabs</strong> — Navigates the playback tab to the next video in your queue.</li>
+      <li><strong>activeTab</strong> — Identifies which tab is currently playing a video to track queue state.</li>
+      <li><strong>Host permission (*://*.youtube.com/*)</strong> — Injects the "Add to Queue" button on YouTube pages and reads the video title and URL from the page.</li>
+    </ul>
+
+    <h2>6. Data Retention</h2>
+    <p>
+      Queue data persists locally until the user clears the queue, removes individual items, or uninstalls the Extension. Uninstalling the Extension removes all locally stored data.
+    </p>
+
+    <h2>7. Children's Privacy</h2>
+    <p>
+      The Extension does not knowingly collect any information from children under the age of 13.
+    </p>
+
+    <h2>8. Changes to This Policy</h2>
+    <p>
+      If this Privacy Policy changes, the updated version will be published at this URL with a revised "Last updated" date. Continued use of the Extension after changes constitutes acceptance of the new policy.
+    </p>
+
+    <h2>9. Contact</h2>
+    <p>
+      For any questions or concerns about this Privacy Policy, please open an issue on the
+      <a href="https://github.com/YOUR_USERNAME/queue-tube/issues" target="_blank" rel="noopener">GitHub repository</a>.
+    </p>
+  </article>
+
+  <footer>
+    <div>
+      <a href="index.html">← Back to QueueTube</a> &nbsp;·&nbsp;
+      <a href="https://github.com/YOUR_USERNAME/queue-tube" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <div>All data stored locally. No tracking. No servers.</div>
+  </footer>
+
+</body>
+</html>
