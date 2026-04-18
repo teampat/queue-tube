@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "QueueTube",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Add YouTube videos to a queue and play them in order. Manage your watch queue easily.",
   "permissions": ["storage", "tabs", "activeTab"],
   "action": {

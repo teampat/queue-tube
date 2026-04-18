@@ -24,14 +24,10 @@ function setupEventListeners() {
   document.getElementById("prevBtn").addEventListener("click", () => sendMessage({ action: "playPrevious" }));
   document.getElementById("nextBtn").addEventListener("click", () => sendMessage({ action: "playNext" }));
 
-  // Auto-play toggle / Play button
-  document.getElementById("autoPlayToggle").addEventListener("click", () => {
-    const isIdle = state.currentIndex < 0 || state.currentIndex >= state.queue.length;
-    if (isIdle && state.queue.length > 0) {
-      // Play first video in queue
+  // Play button — start the queue
+  document.getElementById("playQueueBtn").addEventListener("click", () => {
+    if (state.queue.length > 0) {
       sendMessage({ action: "playVideo", id: state.queue[0].id });
-    } else {
-      sendMessage({ action: "toggleAutoPlay" });
     }
   });
 
@@ -77,32 +73,10 @@ function renderHeader() {
   badge.textContent = state.queue.length;
   badge.classList.toggle("empty", state.queue.length === 0);
 
-  const btn = document.getElementById("autoPlayToggle");
+  // Show/hide Play button
+  const btn = document.getElementById("playQueueBtn");
   const isIdle = state.currentIndex < 0 || state.currentIndex >= state.queue.length;
-
-  if (isIdle && state.queue.length > 0) {
-    // Show Play button when queue has items but nothing is playing
-    btn.classList.remove("active");
-    btn.classList.add("play-mode");
-    btn.title = "Play Queue";
-    btn.innerHTML = `
-      <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-        <path d="M8 5v14l11-7z"/>
-      </svg>
-      <span>Play</span>
-    `;
-  } else {
-    // Show Auto-play toggle when playing
-    btn.classList.remove("play-mode");
-    btn.classList.toggle("active", state.autoPlay);
-    btn.title = state.autoPlay ? "Auto-Play: ON" : "Auto-Play: OFF";
-    btn.innerHTML = `
-      <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
-      </svg>
-      <span>Auto</span>
-    `;
-  }
+  btn.classList.toggle("hidden", !(isIdle && state.queue.length > 0));
 }
 
 function renderNowPlaying() {

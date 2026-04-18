@@ -237,12 +237,9 @@ async function handleMessage(message, sender) {
       return { success: true, autoPlayed: false };
     }
 
-    case "toggleAutoPlay": {
-      state.autoPlay = !state.autoPlay;
-      await saveState(state);
-      notifyStateChanged(state);
-      return { success: true, autoPlay: state.autoPlay };
-    }
+    case "toggleAutoPlay":
+      // Auto-play is always on; ignore toggle requests
+      return { success: true, autoPlay: true };
 
     case "getCurrentVideoInfo": {
       // Content script asking for info about current page
