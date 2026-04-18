@@ -109,6 +109,17 @@ body {
   border-color: rgba(255, 68, 68, 0.3);
 }
 
+.pill-btn.play-mode {
+  background: rgba(255, 68, 68, 0.12);
+  color: var(--accent);
+  border-color: rgba(255, 68, 68, 0.3);
+}
+
+.pill-btn.play-mode:hover {
+  background: rgba(255, 68, 68, 0.2);
+  color: var(--accent-hover);
+}
+
 .pill-btn.danger:hover {
   background: rgba(244, 67, 54, 0.1);
   color: var(--danger);
