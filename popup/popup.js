@@ -104,7 +104,7 @@ function renderQueue() {
           </svg>
         </div>
         <p>Your queue is empty</p>
-        <p class="hint">Click "Add current tab" or browse YouTube and use the queue button on any video</p>
+        <p class="hint">Browse YouTube and click "Add to Queue" to build your playlist.</p>
       </div>
     `;
     return;
